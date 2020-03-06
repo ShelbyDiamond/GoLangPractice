@@ -59,7 +59,7 @@ func main() {
 	}
 
 	// now that we have the answer, we need to display it to the console
-	// %8d = 1 for each lines, words, and characters
+	// %d = 1 for each lines, words, and characters
 	// %s = will show the string
 
 	fmt.Printf("lines: %d\nWords: %d\nCharacters: %d\nFile Name Read: %s \n", lines, words, characters, fileName)
