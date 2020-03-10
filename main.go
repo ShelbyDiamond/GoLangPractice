@@ -70,8 +70,6 @@ func main() {
 	}
 
 	// now it needs to display to the console
-	// %d = 1 for each lines, words, and characters
-	// %s = will show the string
 
 	if flag == "" {
 		fmt.Printf("Lines: %v\nWords: %v\nCharacters:%v\nFile Name Read: %v\n", lines, words, characters, fileName)
