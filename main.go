@@ -20,44 +20,64 @@ package main
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
-	// set of loolean flags
-	countLines := flag.Bool("l", false, "count lines of a file)"
-	
-	// parse the rest of the non-flag items
-	flag.Parse()
-	// get the info after the flag ([]string)
-	fileName := flag.Args()
 
-	// deference countLinces
-	if *countLines {
-		if len(fileName) < 1 {
-			fmt.Println("Enter a file name")
-			os.Exit(1)
-		}
-		// get teh first item
-		fileName := fileName[0]
-		file, err := os.Open(fileName)
+	// https://golang.org/pkg/os/
+	// Any argument typed AFTER the you list your arguments get passed into the os.Args array with the name of the program at the first index
 
-		if err != nil {
-			fmt.Println("Error", err)
-			os.Exit(1)
-		}
-		
-		scanner := bufio.NewScanner(file)
-		lines := 0
-
-		for scanner.Scan() {
-			lines++
-		}
-		fmt.Printf("%d lines in %s\n", lines, fileName)
+	var fileName string
+	var flag string
+	if len(os.Args) > 1 {
+		fileName = os.Args[1]
 	} else {
-		// didnt't have -1 set
-		flag.Usage()
+		fmt.Println("I'm sorry, your file is missing. Try running `go run <current_file> <file_name>` for better results")
+		os.Exit(1)
+	}
+
+	// Once you have the name of the file, you can open it with the os.Open function. If it fails to open, it will give a basic reason why.
+	// https://pkg.go.dev/os?tab=doc
+
+	file, error := os.Open(fileName)
+	if error != nil {
+		fmt.Println("Error ", error)
+	}
+
+	//  This code is going to scan the file line by line and print the output to the console using the bufio package.
+
+	scanner := bufio.NewScanner(file)
+
+	// sets the number of lines, words, and characters to 0 to start
+
+	lines, words, characters := 0, 0, 0
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+
+		// The total number of characters will be the length of each line we iterate through while reading the file and
+		lines++
+
+		line := scanner.Text()
+		characters += len(line)
+
+		// In order to get the number of words we need to split the line based on when the spacebar was used and count the total number of splits.
+
+		splitLines := strings.Split(line, " ")
+		words += len(splitLines)
+	}
+
+	// now it needs to display to the console
+	// %d = 1 for each lines, words, and characters
+	// %s = will show the string
+
+	if flag == "" {
+		fmt.Printf("Lines: %v\nWords: %v\nCharacters:%v\nFile Name Read: %v\n", lines, words, characters, fileName)
+	} else if flag == "-l" {
+		fmt.Printf("%v lines found in file: %v.\n", lines, fileName)
+	} else {
+		fmt.Println("Please enter a valid flag. We currently have '-l' working.")
 	}
 }
